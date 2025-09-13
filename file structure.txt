@@ -1,0 +1,29 @@
+src/
+├── core/
+│   ├── Game.java
+│   ├── GameStateManager.java
+│   ├── GamePanel.java
+├── entities/
+│   ├── Player.java
+│   ├── Enemy.java
+│   ├── NPC.java
+│   ├── Pet.java
+├── systems/
+│   ├── KeyHandler.java
+│   ├── CombatSystem.java
+│   ├── CollisionDetector.java
+├── items/
+│   ├── Item.java
+│   ├── Inventory.java
+├── ui/
+│   ├── HUD.java
+│   ├── Menu.java
+├── quests/
+│   ├── Quest.java
+├── world/
+│   ├── Map.java
+├── assets/
+│   ├── sprites/
+│   ├── sounds/
+└── utils/
+    ├── AudioManager.java
