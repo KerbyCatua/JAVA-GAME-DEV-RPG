@@ -16,6 +16,8 @@ public class GamePanel extends JPanel{
     GameState gameState = new GameState();
     HUD hud = new HUD(keyHandler, gameState);
     Player player = new Player(keyHandler, hud, gameState, panelWidth, panelHeight);
+    CombatSystem combatSystem = new CombatSystem(keyHandler, player);
+    
     
     // constructor
     public GamePanel(){
@@ -24,6 +26,12 @@ public class GamePanel extends JPanel{
 
         addKeyListener(keyHandler);
         setFocusable(true);
+
+        Timer hitBoxes = new Timer(16, e -> {
+            combatSystem.playerAttackedFunc();
+            repaint();
+        });
+        hitBoxes.start();
         
         Timer timer = new Timer(16, e -> {
             player.playerMovement();
@@ -61,13 +69,18 @@ public class GamePanel extends JPanel{
             }
 
             playerDisplay(g2);
+            playerAttacks(g2);
             
             hudDisplay(g2);
+
+            g2.setColor(Color.yellow); // TODO might delete later
+            g2.fillRect(0 ,0, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
         }
 
     }
 
     public void thumbNailDisplay(Graphics2D g2) {
+        // TODO REPLACE IMAGE THUMBNAIL
         setBackground(Color.BLACK);
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
@@ -81,10 +94,30 @@ public class GamePanel extends JPanel{
         g2.fillRect(player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
     }
 
+    public void playerAttacks(Graphics2D g2) {
+        if (combatSystem.playerAttacked) {
+            int attackX = player.getPlayerPositionX();
+            int attackY = player.getPlayerPositionY();
+
+            if (keyHandler.lastPoseUp) {
+                attackY -= 30;
+            } else if (keyHandler.lastPoseDown) {
+                attackY += 30;
+            } else if (keyHandler.lastPoseLeft) {
+                attackX -= 30;
+            } else if (keyHandler.lastPoseRight) {
+                attackX += 30;
+            }
+
+            g2.setColor(Color.GREEN);
+            g2.fillRect(attackX, attackY, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
+        }
+    }
+
     public void hudDisplay(Graphics2D g2) {
-        // stamina hud display
+        // STAMINA hud display
         g2.setColor(Color.ORANGE);
-        g2.fillRect(75, 50, (hud.getPlayerStamina() * 2), 5);
+        g2.fillRect(75, 50, (hud.getPlayerStamina() * 2), 15);
     }
 
 }
