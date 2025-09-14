@@ -1,22 +1,34 @@
 package entities;
 
 import systems.*;
+import ui.*;
+import core.*;
 
-public class Player {
+public class Player{
 
     private KeyHandler keyHandler;
+    private HUD hud;
+    private GameState gameState;
 
-    public Player(KeyHandler keyHandler){
-        this.keyHandler = keyHandler;
-    }
-    
-    private int playerPositionX = 0;
-    private int playerPositionY = 0;
+    private int playerPositionX, playerPositionY;
     private int playerSizeWidth = 60;
     private int playerSizeHeight = 60;
 
+    public Player(KeyHandler keyHandler, HUD hud, GameState gameState, int panelWidth, int panelHeight){
+        this.keyHandler = keyHandler;
+        this.hud = hud;
+        this.gameState = gameState;
+
+        this.playerPositionX = (panelWidth - playerSizeWidth) / 2;
+        this.playerPositionY = (panelHeight - playerSizeHeight) / 2;
+    }
+    
     public void playerMovement(){
-        double playerSpeed = (keyHandler.isShift) ? 2.5 : 1;
+        double playerSpeed = 1;
+        if(hud.getPlayerStamina() >= 0 && !gameState.outOfStamina){
+            if(keyHandler.isShift) playerSpeed = 2.5;
+        }
+        
         if(keyHandler.isUp) playerPositionY -= playerSpeed;
         else if(keyHandler.isDown) playerPositionY += playerSpeed;
         else if(keyHandler.isRight) playerPositionX += playerSpeed;
