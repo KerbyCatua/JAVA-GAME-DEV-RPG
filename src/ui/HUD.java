@@ -17,15 +17,14 @@ public class HUD{
     private int playerMana = 100;
 
     private int playerStamina = 100;
-    private int playerStaminaCost = 6; // 3 orig
-    private int playerStaminaRegen = 1;
+    private int playerStaminaCost = 8; // 3 orig
+    private int playerStaminaRegen = 2;
 
     public void playerStaminaFunc() {
-        if(playerStamina <= 0){
+
+        if (playerStamina <= 28) {
             gameState.outOfStamina = true;
-        }
-    
-        if(playerStamina >= 8){
+        } else if (playerStamina >= 43) {
             gameState.outOfStamina = false;
         }
 

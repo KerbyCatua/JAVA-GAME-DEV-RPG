@@ -29,11 +29,7 @@ public class CombatSystem {
         int attackX = player.getPlayerPositionX();
         int attackY = player.getPlayerPositionY();
 
-        if (keyHandler.lastPoseUp) {
-            attackY -= 30;
-        } else if (keyHandler.lastPoseDown) {
-            attackY += 30;
-        } else if (keyHandler.lastPoseLeft) {
+        if (keyHandler.lastPoseLeft) {
             attackX -= 30;
         } else if (keyHandler.lastPoseRight) {
             attackX += 30;

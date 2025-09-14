@@ -10,7 +10,7 @@ public class KeyHandler implements KeyListener{
 
     public boolean anyKeyPressed = false;
 
-    public boolean lastPoseUp, lastPoseDown, lastPoseLeft ,lastPoseRight;
+    public boolean lastPoseRight = false, lastPoseLeft = false;
 
     @Override
     public void keyPressed(KeyEvent e){
@@ -25,18 +25,12 @@ public class KeyHandler implements KeyListener{
 
         if(code == KeyEvent.VK_J) isAttack = true;
         
-        if (code == KeyEvent.VK_W) {
-            lastPoseUp = true;
-            lastPoseDown = lastPoseLeft = lastPoseRight = false;
-        } else if (code == KeyEvent.VK_S) {
-            lastPoseDown = true;
-            lastPoseUp = lastPoseLeft = lastPoseRight = false;
-        } else if (code == KeyEvent.VK_D) {
+        if (code == KeyEvent.VK_D) {
             lastPoseRight = true;
-            lastPoseUp = lastPoseDown = lastPoseLeft = false;
+            lastPoseLeft = false;
         } else if (code == KeyEvent.VK_A) {
             lastPoseLeft = true;
-            lastPoseUp = lastPoseDown = lastPoseRight = false;
+            lastPoseRight = false;
         }
 
     }
