@@ -36,10 +36,15 @@ public class GamePanel extends JPanel{
         });
         timer.start();
 
-        Timer playerStaminaFunc = new Timer(1000, e -> {
+        Timer hudCostSkills = new Timer(1000, e -> {
+            // passive function
             hud.playerStaminaFunc();
+            hud.playerManaFunc();
+
+
+            hud.playerPunchAttackedFunc();
         });
-        playerStaminaFunc.start();
+        hudCostSkills.start();
 
         requestFocusInWindow(true);
     }
@@ -63,6 +68,14 @@ public class GamePanel extends JPanel{
                 g2.setFont(new Font("Arial", Font.BOLD, 10));
                 String message = "Out of Stamina!";
                 g2.drawString(message, player.getPlayerPositionX() - 10, player.getPlayerPositionY() - 10);
+            }
+
+            // out of mana
+            if(GameState.outOfMana){
+                g2.setColor(Color.BLACK);
+                g2.setFont(new Font("Arial", Font.BOLD, 10));
+                String message = "Out of Mana!";
+                g2.drawString(message, player.getPlayerPositionX() - 10, player.getPlayerPositionY());
             }
 
             playerDisplay(g2);
@@ -103,7 +116,7 @@ public class GamePanel extends JPanel{
     }
 
     public void playerAttacks(Graphics2D g2) {
-        if (combatSystem.playerAttacked) {
+        if (CombatSystem.playerAttacked) {
             int attackX = player.getPlayerPositionX();
             int attackY = player.getPlayerPositionY();
 
@@ -119,6 +132,11 @@ public class GamePanel extends JPanel{
     }
 
     public void hudDisplay(Graphics2D g2) {
+        
+        // MANA hud display
+        g2.setColor(Color.BLUE);
+        g2.fillRect(108, 60, (hud.getPlayerMana() * 2) - 6, 10);
+
         // STAMINA hud display
         g2.setColor(Color.ORANGE);
         g2.fillRect(101, 83, (hud.getPlayerStamina() * 2) - 51, 15);

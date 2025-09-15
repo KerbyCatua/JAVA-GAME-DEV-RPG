@@ -29,10 +29,10 @@ public class Player{
             if(keyHandler.isShift) playerSpeed = 2.5;
         }
         
-        if(keyHandler.isUp) playerPositionY -= playerSpeed;
-        else if(keyHandler.isDown) playerPositionY += playerSpeed;
-        else if(keyHandler.isRight) playerPositionX += playerSpeed;
-        else if(keyHandler.isLeft) playerPositionX -= playerSpeed;
+        if(keyHandler.isUp && !CombatSystem.playerAttacked) playerPositionY -= playerSpeed;
+        else if(keyHandler.isDown && !CombatSystem.playerAttacked) playerPositionY += playerSpeed;
+        else if(keyHandler.isRight && !CombatSystem.playerAttacked) playerPositionX += playerSpeed;
+        else if(keyHandler.isLeft && !CombatSystem.playerAttacked) playerPositionX -= playerSpeed;
     }
 
     public int getPlayerPositionX() {

@@ -2,6 +2,7 @@ package systems;
 
 import java.awt.Rectangle;
 
+import core.GameState;
 import entities.*;
 
 public class CombatSystem {
@@ -13,11 +14,11 @@ public class CombatSystem {
         this.player = player;
     }
 
-    public boolean playerAttacked = false; 
+    public static boolean playerAttacked = false;
     public long playerAttackDuration = 0;
 
     public void playerAttackedFunc() {
-        if (keyHandler.isAttack) { 
+        if (keyHandler.isAttack && !GameState.outOfMana) { 
             playerAttacked = true;
             playerAttackDuration = System.currentTimeMillis();
         }
