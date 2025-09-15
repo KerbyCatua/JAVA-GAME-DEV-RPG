@@ -30,9 +30,9 @@ public class Player{
         }
         
         if(keyHandler.isUp) playerPositionY -= playerSpeed;
-        if(keyHandler.isDown) playerPositionY += playerSpeed;
-        if(keyHandler.isRight) playerPositionX += playerSpeed;
-        if(keyHandler.isLeft) playerPositionX -= playerSpeed;
+        else if(keyHandler.isDown) playerPositionY += playerSpeed;
+        else if(keyHandler.isRight) playerPositionX += playerSpeed;
+        else if(keyHandler.isLeft) playerPositionX -= playerSpeed;
     }
 
     public int getPlayerPositionX() {

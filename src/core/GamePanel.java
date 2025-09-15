@@ -19,8 +19,7 @@ public class GamePanel extends JPanel{
     HUD hud = new HUD(keyHandler, gameState);
     Player player = new Player(keyHandler, hud, gameState, panelWidth, panelHeight);
     CombatSystem combatSystem = new CombatSystem(keyHandler, player);
-    
-    // constructor
+
     public GamePanel(){
         this.setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setDoubleBuffered(true);
@@ -92,9 +91,13 @@ public class GamePanel extends JPanel{
 
     public void playerDisplay(Graphics2D g2) {
 
-        ImageIcon imageToDraw = sheets.getRightPoseIdle();
-        if(keyHandler.lastPoseLeft) imageToDraw = sheets.getLeftPoseIdle();
+        ImageIcon imageToDraw;
+        if (keyHandler.lastPoseLeft) imageToDraw = sheets.getLeftPoseIdle();
+        else imageToDraw = sheets.getRightPoseIdle();
 
+        //shadow
+        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() - 40, player.getPlayerPositionY() - 25, 140, 95,null);
+        //player
         g2.drawImage(imageToDraw.getImage(), player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight(),null);
 
     }

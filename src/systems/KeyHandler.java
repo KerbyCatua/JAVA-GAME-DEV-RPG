@@ -10,7 +10,7 @@ public class KeyHandler implements KeyListener{
 
     public boolean anyKeyPressed = false;
 
-    public boolean lastPoseRight = false, lastPoseLeft = false;
+    public boolean lastPoseRight, lastPoseLeft;
 
     @Override
     public void keyPressed(KeyEvent e){
@@ -32,6 +32,7 @@ public class KeyHandler implements KeyListener{
             lastPoseLeft = true;
             lastPoseRight = false;
         }
+
 
     }
 

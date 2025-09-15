@@ -11,7 +11,11 @@ public class Sheets {
     ImageIcon hudIcon;
     ImageIcon thumbNailIcon;
 
+    ImageIcon playerShadow;
+
     public Sheets(){
+        this.playerShadow = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\player\\Player_Shadow.gif");
+
         this.hudIcon = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\hud\\bar.gif");
         this.thumbNailIcon = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\thumbnail\\Thumbnail.gif");
         
@@ -33,6 +37,10 @@ public class Sheets {
 
     public ImageIcon getThumbNailIcon() {
         return thumbNailIcon;
+    }
+
+    public ImageIcon getPlayerShadow() {
+        return playerShadow;
     }
 
 }
