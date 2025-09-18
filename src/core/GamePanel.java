@@ -124,7 +124,7 @@ public class GamePanel extends JPanel{
         else imageToDraw = sheets.getRightPoseIdle();
 
         //shadow
-        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() - 45, player.getPlayerPositionY() - 37, 140, 95, this);
+        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() - 3 , player.getPlayerPositionY() + 30, 55, 40, this);
         //player
         g2.drawImage(imageToDraw.getImage(), player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight(), this);
 

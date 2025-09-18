@@ -23,19 +23,19 @@ public class Sheets {
     public Sheets(){
         try {
             
-            wholeMap = ImageIO.read(new File("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\map\\Whole_Map.png"));
+            wholeMap = ImageIO.read(new File("sheets/map/Whole_Map.png"));
 
         } catch (IOException e) {
             e.getStackTrace();
         }
 
-        this.playerShadow = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\player\\Player_Shadow.gif");
+        this.playerShadow = new ImageIcon("sheets/player/Player_Shadow.png");
 
-        this.hudIcon = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\hud\\bar.gif");
-        this.thumbNailIcon = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\thumbnail\\Thumbnail.gif");
+        this.hudIcon = new ImageIcon("sheets/hud/bar.gif");
+        this.thumbNailIcon = new ImageIcon("sheets/thumbnail/Thumbnail.gif");
         
-        this.rightPoseIdle = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\player\\Last_Pose_Right.gif");
-        this.leftPoseIdle = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\player\\Last_Pose_Left.gif");
+        this.rightPoseIdle = new ImageIcon("sheets/player/Last_Pose_Right.gif");
+        this.leftPoseIdle = new ImageIcon("sheets/player/Last_Pose_Left.gif");
     }
 
     public ImageIcon getRightPoseIdle() {
