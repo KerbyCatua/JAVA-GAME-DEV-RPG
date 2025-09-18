@@ -4,6 +4,7 @@ import entities.*;
 import systems.*;
 import ui.*;
 import assets.*;
+import world.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class GamePanel extends JPanel{
     HUD hud = new HUD(keyHandler, gameState);
     Player player = new Player(keyHandler, hud, gameState, panelWidth, panelHeight);
     CombatSystem combatSystem = new CombatSystem(keyHandler, player);
+    GameMap gameMap = new GameMap(sheets, player, panelWidth, panelHeight);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -36,15 +38,16 @@ public class GamePanel extends JPanel{
         });
         timer.start();
 
-        Timer hudCostSkills = new Timer(1000, e -> {
+        Timer hudCostSkillsTimer = new Timer(500, e -> {
             // passive function
             hud.playerStaminaFunc();
             hud.playerManaFunc();
 
 
             hud.playerPunchAttackedFunc();
+            gameMap.mapRenderLocationGameState();
         });
-        hudCostSkills.start();
+        hudCostSkillsTimer.start();
 
         requestFocusInWindow(true);
     }
@@ -53,14 +56,26 @@ public class GamePanel extends JPanel{
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        
 
         if(!gameState.thumbNailIsPressed){
             thumbNailDisplay(g2);
             if(keyHandler.anyKeyPressed) gameState.thumbNailIsPressed = true;
         }else{
             // game start
-            
+
+            // map location
+            if(GameState.isInGreenLandMap){
+                gameMap.greenLandMap(g2);
+            }
+            if(GameState.isInSnowLandMap){
+                gameMap.snowLandMap(g2);
+            }
+            if(GameState.isInDryLandMap){
+                gameMap.dryLandMap(g2);
+            }
+            if(GameState.isInDarkLandMap){
+                gameMap.darkLandMap(g2);
+            }
 
             // out of stamina
             if(gameState.outOfStamina){
@@ -109,9 +124,9 @@ public class GamePanel extends JPanel{
         else imageToDraw = sheets.getRightPoseIdle();
 
         //shadow
-        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() - 40, player.getPlayerPositionY() - 25, 140, 95,null);
+        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() - 45, player.getPlayerPositionY() - 37, 140, 95, this);
         //player
-        g2.drawImage(imageToDraw.getImage(), player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight(),null);
+        g2.drawImage(imageToDraw.getImage(), player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight(), this);
 
     }
 
@@ -142,7 +157,9 @@ public class GamePanel extends JPanel{
         g2.fillRect(101, 83, (hud.getPlayerStamina() * 2) - 51, 15);
 
         // main HUD
-        g2.drawImage(sheets.getHudIcon().getImage(), 5, -110, 325,325, null);
+        g2.drawImage(sheets.getHudIcon().getImage(), 5, -110, 325,325, this);
     }
+
+
 
 }

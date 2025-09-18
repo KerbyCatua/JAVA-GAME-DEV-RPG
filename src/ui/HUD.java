@@ -18,11 +18,11 @@ public class HUD{
 
     private int playerMana = 100;
     private int playerManaRegen = 1;
-    private int playerPunchManaCost = 5;
+    private int playerPunchManaCost = 3;
 
     private int playerStamina = 100;
-    private int playerStaminaCost = 8; // 3 orig
-    private int playerStaminaRegen = 2;
+    private int playerStaminaCost = 4; // 3 orig
+    private int playerStaminaRegen = 1;
 
     public void playerPunchAttackedFunc() {
     

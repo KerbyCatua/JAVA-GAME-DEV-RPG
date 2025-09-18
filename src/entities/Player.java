@@ -11,8 +11,8 @@ public class Player{
     private GameState gameState;
 
     private int playerPositionX, playerPositionY;
-    private int playerSizeWidth = 60;
-    private int playerSizeHeight = 60;
+    private int playerSizeWidth = 50;
+    private int playerSizeHeight = 50;
 
     public Player(KeyHandler keyHandler, HUD hud, GameState gameState, int panelWidth, int panelHeight){
         this.keyHandler = keyHandler;
@@ -24,23 +24,31 @@ public class Player{
     }
     
     public void playerMovement(){
-        double playerSpeed = 1;
+        double playerSpeed = 2;
         if(hud.getPlayerStamina() >= 0 && !gameState.outOfStamina){
-            if(keyHandler.isShift) playerSpeed = 2.5;
+            if(keyHandler.isShift) playerSpeed = 5; // Shift Speed
         }
         
         if(keyHandler.isUp && !CombatSystem.playerAttacked) playerPositionY -= playerSpeed;
-        else if(keyHandler.isDown && !CombatSystem.playerAttacked) playerPositionY += playerSpeed;
-        else if(keyHandler.isRight && !CombatSystem.playerAttacked) playerPositionX += playerSpeed;
-        else if(keyHandler.isLeft && !CombatSystem.playerAttacked) playerPositionX -= playerSpeed;
+        if(keyHandler.isDown && !CombatSystem.playerAttacked) playerPositionY += playerSpeed;
+        if(keyHandler.isRight && !CombatSystem.playerAttacked) playerPositionX += playerSpeed;
+        if(keyHandler.isLeft && !CombatSystem.playerAttacked) playerPositionX -= playerSpeed;
     }
 
     public int getPlayerPositionX() {
         return playerPositionX;
     }
 
+    public void setPlayerPositionX(int playerPositionX) {
+        this.playerPositionX = playerPositionX;
+    }
+
     public int getPlayerPositionY() {
         return playerPositionY;
+    }
+
+    public void setPlayerPositionY(int playerPositionY) {
+        this.playerPositionY = playerPositionY;
     }
 
     public int getPlayerSizeHeight() {

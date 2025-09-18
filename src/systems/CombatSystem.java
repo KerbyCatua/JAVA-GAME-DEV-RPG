@@ -38,8 +38,10 @@ public class CombatSystem {
 
         Rectangle playerAttack = new Rectangle(attackX, attackY, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
 
+        // TODO TO DELETE
         Rectangle enemy = new Rectangle(0 ,0, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
 
+        // TODO TO DELETE
         if(playerAttack.intersects(enemy) && playerAttacked){
             System.out.println("Enemy Attacked!");
         }

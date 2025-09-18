@@ -1,5 +1,10 @@
 package assets;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Sheets {
@@ -13,7 +18,17 @@ public class Sheets {
 
     ImageIcon playerShadow;
 
+    BufferedImage wholeMap;
+
     public Sheets(){
+        try {
+            
+            wholeMap = ImageIO.read(new File("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\map\\Whole_Map.png"));
+
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+
         this.playerShadow = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\player\\Player_Shadow.gif");
 
         this.hudIcon = new ImageIcon("C:\\Users\\Kerby\\OneDrive\\Desktop\\RPG GAME\\RPG\\sheets\\hud\\bar.gif");
@@ -41,6 +56,10 @@ public class Sheets {
 
     public ImageIcon getPlayerShadow() {
         return playerShadow;
+    }
+
+    public BufferedImage getWholeMap() {
+        return wholeMap;
     }
 
 }
