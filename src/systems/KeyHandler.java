@@ -3,7 +3,6 @@ package systems;
 import java.awt.event.*;
 
 public class KeyHandler implements KeyListener{
-
     public boolean isUp, isDown, isLeft, isRight, isShift;
 
     public boolean isAttack;
@@ -25,10 +24,10 @@ public class KeyHandler implements KeyListener{
 
         if(code == KeyEvent.VK_J) isAttack = true;
         
-        if (code == KeyEvent.VK_D) {
+        if (code == KeyEvent.VK_D && !CombatSystem.playerAttacked) {
             lastPoseRight = true;
             lastPoseLeft = false;
-        } else if (code == KeyEvent.VK_A) {
+        } else if (code == KeyEvent.VK_A && !CombatSystem.playerAttacked) {
             lastPoseLeft = true;
             lastPoseRight = false;
         }

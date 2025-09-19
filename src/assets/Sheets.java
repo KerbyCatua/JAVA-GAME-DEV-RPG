@@ -34,8 +34,8 @@ public class Sheets {
         this.hudIcon = new ImageIcon("sheets/hud/bar.gif");
         this.thumbNailIcon = new ImageIcon("sheets/thumbnail/Thumbnail.gif");
         
-        this.rightPoseIdle = new ImageIcon("sheets/player/Last_Pose_Right.gif");
-        this.leftPoseIdle = new ImageIcon("sheets/player/Last_Pose_Left.gif");
+        this.rightPoseIdle = new ImageIcon("sheets/player/Idle_Right.gif");
+        this.leftPoseIdle = new ImageIcon("sheets/player/Idle_Left.gif");
     }
 
     public ImageIcon getRightPoseIdle() {

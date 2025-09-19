@@ -9,6 +9,9 @@ import world.*;
 import javax.swing.*;
 import java.awt.*;
 
+// TODO CAMERA SYSTEM 
+// import java.awt.geom.AffineTransform;
+
 public class GamePanel extends JPanel{
 
     private int panelWidth = 800;
@@ -21,6 +24,7 @@ public class GamePanel extends JPanel{
     Player player = new Player(keyHandler, hud, gameState, panelWidth, panelHeight);
     CombatSystem combatSystem = new CombatSystem(keyHandler, player);
     GameMap gameMap = new GameMap(sheets, player, panelWidth, panelHeight);
+    CollisionDetector collisionDetector = new CollisionDetector(this);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -32,8 +36,11 @@ public class GamePanel extends JPanel{
         this.setBackground(Color.GRAY);
         
         Timer timer = new Timer(41, e -> {
-            player.playerMovement();
+            player.playerMovementAndHitbox();
+
             combatSystem.playerAttackedFunc();
+
+            collisionDetector.mapCollision();
             repaint();
         });
         timer.start();
@@ -43,8 +50,8 @@ public class GamePanel extends JPanel{
             hud.playerStaminaFunc();
             hud.playerManaFunc();
 
-
             hud.playerPunchAttackedFunc();
+
             gameMap.mapRenderLocationGameState();
         });
         hudCostSkillsTimer.start();
@@ -63,19 +70,16 @@ public class GamePanel extends JPanel{
         }else{
             // game start
 
+            // TODO camera system
+            // g2.translate(getWidth()/2.15, getHeight()/2.2);   
+            // g2.scale(1.25, 1.25);
+            // g2.translate(-player.getPlayerPositionX(), -player.getPlayerPositionY());
+            
             // map location
-            if(GameState.isInGreenLandMap){
-                gameMap.greenLandMap(g2);
-            }
-            if(GameState.isInSnowLandMap){
-                gameMap.snowLandMap(g2);
-            }
-            if(GameState.isInDryLandMap){
-                gameMap.dryLandMap(g2);
-            }
-            if(GameState.isInDarkLandMap){
-                gameMap.darkLandMap(g2);
-            }
+            if(GameState.isInGreenLandMap) gameMap.greenLandMap(g2);
+            if(GameState.isInSnowLandMap) gameMap.snowLandMap(g2);
+            if(GameState.isInDryLandMap) gameMap.dryLandMap(g2);
+            if(GameState.isInDarkLandMap) gameMap.darkLandMap(g2);
 
             // out of stamina
             if(gameState.outOfStamina){
@@ -97,6 +101,9 @@ public class GamePanel extends JPanel{
             
             playerAttacks(g2);
             
+            // TODO CAMERA SYSTEM
+            // g2.setTransform(new AffineTransform());
+
             hudDisplay(g2);
 
             // g2.setColor(Color.yellow); // TODO ENEMY HIT BOX
@@ -108,12 +115,12 @@ public class GamePanel extends JPanel{
     public void thumbNailDisplay(Graphics2D g2) {
 
         // TODO REPLACE IMAGE THUMBNAIL / TO DELETE
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.BLACK);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
         String message = "Press any key to continue";
         g2.drawString(message, (panelWidth / 2) - 130, panelHeight / 2);
 
-        g2.drawImage(sheets.getThumbNailIcon().getImage(), 0, 0, getWidth(), getHeight(),null);
+        // g2.drawImage(sheets.getThumbNailIcon().getImage(), 0, 0, getWidth(), getHeight(),null);
 
     }
 
@@ -124,25 +131,26 @@ public class GamePanel extends JPanel{
         else imageToDraw = sheets.getRightPoseIdle();
 
         //shadow
-        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() - 3 , player.getPlayerPositionY() + 30, 55, 40, this);
+        g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() + 6, player.getPlayerPositionY() + 35, 45, 30, this);
         //player
         g2.drawImage(imageToDraw.getImage(), player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight(), this);
+        
 
     }
 
     public void playerAttacks(Graphics2D g2) {
         if (CombatSystem.playerAttacked) {
             int attackX = player.getPlayerPositionX();
-            int attackY = player.getPlayerPositionY();
+            int attackY = player.getPlayerPositionY() + 10;
 
             if (keyHandler.lastPoseLeft) {
-                attackX -= 30;
+                attackX -= 5;
             } else if (keyHandler.lastPoseRight) {
-                attackX += 30;
+                attackX += 25;
             }
 
             g2.setColor(Color.GREEN);
-            g2.fillRect(attackX, attackY, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
+            g2.fillRect(attackX, attackY, (int) (player.getPlayerSizeWidth() / 1.4), (int) (player.getPlayerSizeHeight() / 1.4));
         }
     }
 

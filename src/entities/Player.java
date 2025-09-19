@@ -2,6 +2,9 @@ package entities;
 
 import systems.*;
 import ui.*;
+
+import java.awt.Rectangle;
+
 import core.*;
 
 public class Player{
@@ -11,10 +14,12 @@ public class Player{
     private GameState gameState;
 
     private int playerPositionX, playerPositionY;
-    private int playerSizeWidth = 50;
-    private int playerSizeHeight = 50;
+    private int playerSizeWidth = 60;
+    private int playerSizeHeight = 60;
+    public static Rectangle playerHitbox;
 
     public Player(KeyHandler keyHandler, HUD hud, GameState gameState, int panelWidth, int panelHeight){
+
         this.keyHandler = keyHandler;
         this.hud = hud;
         this.gameState = gameState;
@@ -23,17 +28,21 @@ public class Player{
         this.playerPositionY = (panelHeight - playerSizeHeight) / 2;
     }
     
-    public void playerMovement(){
+    public void playerMovementAndHitbox(){
         double playerSpeed = 2;
         if(hud.getPlayerStamina() >= 0 && !gameState.outOfStamina){
             if(keyHandler.isShift) playerSpeed = 5; // Shift Speed
         }
         
-        if(keyHandler.isUp && !CombatSystem.playerAttacked) playerPositionY -= playerSpeed;
-        if(keyHandler.isDown && !CombatSystem.playerAttacked) playerPositionY += playerSpeed;
-        if(keyHandler.isRight && !CombatSystem.playerAttacked) playerPositionX += playerSpeed;
-        if(keyHandler.isLeft && !CombatSystem.playerAttacked) playerPositionX -= playerSpeed;
+        if(keyHandler.isUp && !CombatSystem.playerAttacked && !GameState.cannotMoveUpDueToCollision) playerPositionY -= playerSpeed;
+        if(keyHandler.isDown && !CombatSystem.playerAttacked && !GameState.cannotMoveDownDueToCollision) playerPositionY += playerSpeed;
+        if(keyHandler.isRight && !CombatSystem.playerAttacked && !GameState.cannotMoveRightDueToCollision) playerPositionX += playerSpeed;
+        if(keyHandler.isLeft && !CombatSystem.playerAttacked && !GameState.cannotMoveLeftDueToCollision) playerPositionX -= playerSpeed;
+
+                                    //  offset & size   
+        playerHitbox = new Rectangle(getPlayerPositionX() + 20, getPlayerPositionY() + 20, (getPlayerSizeWidth() - 41), (getPlayerSizeHeight()) - 27);
     }
+
 
     public int getPlayerPositionX() {
         return playerPositionX;

@@ -18,7 +18,7 @@ public class CombatSystem {
     public long playerAttackDuration = 0;
 
     public void playerAttackedFunc() {
-        if (keyHandler.isAttack && !GameState.outOfMana) { 
+        if (keyHandler.isAttack && !GameState.outOfMana && !playerAttacked) { 
             playerAttacked = true;
             playerAttackDuration = System.currentTimeMillis();
         }
@@ -28,23 +28,24 @@ public class CombatSystem {
         }
 
         int attackX = player.getPlayerPositionX();
-        int attackY = player.getPlayerPositionY();
+        int attackY = player.getPlayerPositionY() + 10;
 
         if (keyHandler.lastPoseLeft) {
-            attackX -= 30;
+            attackX -= 5;
         } else if (keyHandler.lastPoseRight) {
-            attackX += 30;
+            attackX += 25;
         }
 
-        Rectangle playerAttack = new Rectangle(attackX, attackY, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
+        Rectangle playerAttack = new Rectangle(attackX, attackY, (int) (player.getPlayerSizeWidth() / 1.4), (int) (player.getPlayerSizeHeight() / 1.4));
 
-        // TODO TO DELETE
-        Rectangle enemy = new Rectangle(0 ,0, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
 
-        // TODO TO DELETE
-        if(playerAttack.intersects(enemy) && playerAttacked){
-            System.out.println("Enemy Attacked!");
-        }
+        // // TODO TO DELETE
+        // Rectangle enemy = new Rectangle(0 ,0, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
+
+        // // TODO TO DELETE
+        // if(playerAttack.intersects(enemy) && playerAttacked){
+        //     System.out.println("Enemy Attacked!");
+        // }
 
     }
     

@@ -12,5 +12,9 @@ public class GameState {
     public static boolean isInDarkLandMap = false;
     public static boolean isInDryLandMap = false;
 
+    public static boolean cannotMoveRightDueToCollision = false;
+    public static boolean cannotMoveLeftDueToCollision = false;
+    public static boolean cannotMoveUpDueToCollision = false;
+    public static boolean cannotMoveDownDueToCollision = false;
     
 }
