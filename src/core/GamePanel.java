@@ -79,7 +79,7 @@ public class GamePanel extends JPanel{
             if(GameState.isInGreenLandMap) gameMap.greenLandMap(g2);
             if(GameState.isInSnowLandMap) gameMap.snowLandMap(g2);
             if(GameState.isInDryLandMap) gameMap.dryLandMap(g2);
-            if(GameState.isInDarkLandMap) gameMap.darkLandMap(g2);
+            if(GameState.isInDarkLandMap) gameMap.darkLandMap(g2); //layer 0
 
             // out of stamina
             if(gameState.outOfStamina){
@@ -97,9 +97,10 @@ public class GamePanel extends JPanel{
                 g2.drawString(message, player.getPlayerPositionX() - 10, player.getPlayerPositionY());
             }
 
-            playerDisplay(g2);
-            
+            gameMap.objectsToDrawLayerZero(g2); // layer 0
+            playerDisplay(g2); //layer 1
             playerAttacks(g2);
+            gameMap.objectsToDrawLayerOne(g2); //layer 2
             
             // TODO CAMERA SYSTEM
             // g2.setTransform(new AffineTransform());
@@ -127,8 +128,30 @@ public class GamePanel extends JPanel{
     public void playerDisplay(Graphics2D g2) {
 
         ImageIcon imageToDraw;
-        if (keyHandler.lastPoseLeft) imageToDraw = sheets.getLeftPoseIdle();
-        else imageToDraw = sheets.getRightPoseIdle();
+
+        if (keyHandler.isDown || keyHandler.isUp) {
+            if(keyHandler.lastPoseLeft){
+                imageToDraw = (keyHandler.isShift && !GameState.outOfMana)
+                           ? sheets.getRunningLeft() : sheets.getWalkingLeft();
+            }else{
+                imageToDraw = (keyHandler.isShift && !GameState.outOfMana)
+                           ? sheets.getRunningRight() : sheets.getWalkingRight();
+            }
+        }
+        else if (keyHandler.isLeft) {
+            imageToDraw = (keyHandler.isShift && !GameState.outOfMana)
+                           ? sheets.getRunningLeft() : sheets.getWalkingLeft();
+        }
+        else if (keyHandler.isRight) {
+            imageToDraw = (keyHandler.isShift && !GameState.outOfMana)
+                           ? sheets.getRunningRight() : sheets.getWalkingRight();
+        }
+        else if (keyHandler.lastPoseLeft) {
+            imageToDraw = sheets.getLeftPoseIdle();
+        }
+        else {
+            imageToDraw = sheets.getRightPoseIdle();
+        }
 
         //shadow
         g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() + 6, player.getPlayerPositionY() + 35, 45, 30, this);
@@ -166,6 +189,17 @@ public class GamePanel extends JPanel{
 
         // main HUD
         g2.drawImage(sheets.getHudIcon().getImage(), 5, -110, 325,325, this);
+    }
+
+    public void drawObjectLayerZeroMap1(Graphics2D g2) {
+        
+        
+
+    }
+
+    public void drawObjectLayerOneMap1(Graphics2D g2) {
+
+
     }
 
 

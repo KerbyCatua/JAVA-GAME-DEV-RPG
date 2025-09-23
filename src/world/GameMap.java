@@ -24,6 +24,44 @@ public class GameMap {
     private int mapWidth = 1590;
     private int mapHeight = 1190;
 
+    public void objectsToDrawLayerZero(Graphics2D g2) {
+        // default position
+        int objectLayerZeroPositionX = 0, objectLayerZeroPositionY = 0;
+        if(GameState.isInGreenLandMap){
+            objectLayerZeroPositionX = 0;
+            objectLayerZeroPositionY = 0;
+        }else if(GameState.isInSnowLandMap){
+            objectLayerZeroPositionX = 0;
+            objectLayerZeroPositionY = -590;
+        }else if(GameState.isInDarkLandMap){
+            objectLayerZeroPositionX = -790;
+            objectLayerZeroPositionY = 0;
+        }else if(GameState.isInDryLandMap){
+            objectLayerZeroPositionX = -790;
+            objectLayerZeroPositionY = -589;
+        }
+        g2.drawImage(sheets.getWholeMapObjectsLayerZero().getImage(), objectLayerZeroPositionX, objectLayerZeroPositionY, mapWidth, mapHeight, null);
+    }
+
+    public void objectsToDrawLayerOne(Graphics2D g2) {
+        // default position
+        int objectLayerOnePositionX = 0, objectLayerOnePositionY = 0;
+        if(GameState.isInGreenLandMap){
+            objectLayerOnePositionX = 0;
+            objectLayerOnePositionY = 0;
+        }else if(GameState.isInSnowLandMap){
+            objectLayerOnePositionX = 0;
+            objectLayerOnePositionY = -590;
+        }else if(GameState.isInDarkLandMap){
+            objectLayerOnePositionX = -790;
+            objectLayerOnePositionY = 0;
+        }else if(GameState.isInDryLandMap){
+            objectLayerOnePositionX = -790;
+            objectLayerOnePositionY = -589;
+        }
+        g2.drawImage(sheets.getWholeMapObjectsLayerOne().getImage(), objectLayerOnePositionX, objectLayerOnePositionY, mapWidth, mapHeight, null);
+    }
+
     public void greenLandMap(Graphics2D g2) {
         g2.drawImage(sheets.getWholeMap(), 0, 0, mapWidth, mapHeight, null);
     }

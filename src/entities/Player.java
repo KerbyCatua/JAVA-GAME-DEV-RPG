@@ -31,7 +31,7 @@ public class Player{
     public void playerMovementAndHitbox(){
         double playerSpeed = 2;
         if(hud.getPlayerStamina() >= 0 && !gameState.outOfStamina){
-            if(keyHandler.isShift) playerSpeed = 5; // Shift Speed
+            if(keyHandler.isShift) playerSpeed = 4; // Shift Speed
         }
         
         if(keyHandler.isUp && !CombatSystem.playerAttacked && !GameState.cannotMoveUpDueToCollision) playerPositionY -= playerSpeed;
