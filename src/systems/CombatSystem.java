@@ -14,8 +14,11 @@ public class CombatSystem {
         this.player = player;
     }
 
+    // PLAYER PUNCH
     public static boolean playerAttacked = false;
     public long playerAttackDuration = 0;
+    public Rectangle playerAttackRange;
+    public int playerPunchDamage = 10;
 
     public void playerAttackedFunc() {
         if (keyHandler.isAttack && !GameState.outOfMana && !playerAttacked) { 
@@ -36,17 +39,13 @@ public class CombatSystem {
             attackX += 25;
         }
 
-        Rectangle playerAttack = new Rectangle(attackX, attackY, (int) (player.getPlayerSizeWidth() / 1.4), (int) (player.getPlayerSizeHeight() / 1.4));
+        playerAttackRange = new Rectangle(attackX, attackY, (int) (player.getPlayerSizeWidth() / 1.4), (int) (player.getPlayerSizeHeight() / 1.4));
+    }
 
 
-        // // TODO TO DELETE
-        // Rectangle enemy = new Rectangle(0 ,0, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
 
-        // // TODO TO DELETE
-        // if(playerAttack.intersects(enemy) && playerAttacked){
-        //     System.out.println("Enemy Attacked!");
-        // }
-
+    public int getPlayerPunchDamage() {
+        return playerPunchDamage;
     }
     
 }

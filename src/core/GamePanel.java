@@ -25,6 +25,7 @@ public class GamePanel extends JPanel{
     CombatSystem combatSystem = new CombatSystem(keyHandler, player);
     GameMap gameMap = new GameMap(sheets, player, panelWidth, panelHeight);
     CollisionDetector collisionDetector = new CollisionDetector(this);
+    Enemy enemy = new Enemy(gameState, player, this, sheets, combatSystem, hud, keyHandler);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -41,12 +42,15 @@ public class GamePanel extends JPanel{
             combatSystem.playerAttackedFunc();
 
             collisionDetector.mapCollision();
+
+            enemy.updateWolfPositionAndWolfAttack();
+            enemy.updateSkeletonPositionAndSkeletonAttack();
             repaint();
         });
         timer.start();
 
         Timer hudCostSkillsTimer = new Timer(500, e -> {
-            // passive function
+            // PASSIVE HUD MANA, HEALTH, STAMINA
             hud.playerStaminaFunc();
             hud.playerManaFunc();
 
@@ -99,16 +103,14 @@ public class GamePanel extends JPanel{
 
             gameMap.objectsToDrawLayerZero(g2); // layer 0
             playerDisplay(g2); //layer 1
-            playerAttacks(g2);
+            // playerAttacks(g2);
+            enemy.enemyDeployState(g2);
             gameMap.objectsToDrawLayerOne(g2); //layer 2
             
             // TODO CAMERA SYSTEM
             // g2.setTransform(new AffineTransform());
 
             hudDisplay(g2);
-
-            // g2.setColor(Color.yellow); // TODO ENEMY HIT BOX
-            // g2.fillRect(0 ,0, player.getPlayerSizeWidth(), player.getPlayerSizeHeight());
         }
 
     }
@@ -128,8 +130,10 @@ public class GamePanel extends JPanel{
     public void playerDisplay(Graphics2D g2) {
 
         ImageIcon imageToDraw;
-
-        if (keyHandler.isDown || keyHandler.isUp) {
+        if(CombatSystem.playerAttacked){
+            imageToDraw = (keyHandler.lastPoseLeft)
+                        ? sheets.getPlayerPunchLeft() : sheets.getPlayerPunchRight();
+        }else if (keyHandler.isDown || keyHandler.isUp) {
             if(keyHandler.lastPoseLeft){
                 imageToDraw = (keyHandler.isShift && !GameState.outOfMana)
                            ? sheets.getRunningLeft() : sheets.getWalkingLeft();
@@ -157,7 +161,6 @@ public class GamePanel extends JPanel{
         g2.drawImage(sheets.getPlayerShadow().getImage(), player.getPlayerPositionX() + 6, player.getPlayerPositionY() + 35, 45, 30, this);
         //player
         g2.drawImage(imageToDraw.getImage(), player.getPlayerPositionX(), player.getPlayerPositionY(), player.getPlayerSizeWidth(), player.getPlayerSizeHeight(), this);
-        
 
     }
 
@@ -178,30 +181,37 @@ public class GamePanel extends JPanel{
     }
 
     public void hudDisplay(Graphics2D g2) {
+
+        // HEALTH HUD DISPLAY
+        g2.setColor(new Color(90, 89, 90));
+        g2.fillRect(110, 30, (int) (100 * 1.9), 30);
+        g2.setColor(new Color(220, 42, 42));
+        g2.fillRect(110, 30, (int) (hud.getPlayerHealth() * 1.9), 30);
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 10));
+        g2.drawString(String.valueOf("HP: " + (int) hud.getPlayerHealth()) + " / 100", 125, 50);
         
-        // MANA hud display
-        g2.setColor(Color.BLUE);
+        // MANA HUD DISPLAY
+        g2.setColor(new Color(90, 89, 90));
+        g2.fillRect(108, 60, (100 * 2) - 6, 10);
+        g2.setColor(new Color(73, 154, 201));
         g2.fillRect(108, 60, (hud.getPlayerMana() * 2) - 6, 10);
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 9));
+        g2.drawString(String.valueOf("MP: " + (hud.getPlayerMana() - 1)) + " / 100", 120, 68);
 
-        // STAMINA hud display
-        g2.setColor(Color.ORANGE);
-        g2.fillRect(101, 83, (hud.getPlayerStamina() * 2) - 51, 15);
+        // STAMINA HUD DISPLAY
+        g2.setColor(new Color(90, 89, 90));
+        g2.fillRect(103, 83, (int) (100 * 1.5), 15);
+        g2.setColor(new Color(237, 127, 2));
+        g2.fillRect(103, 83, (int) (hud.getPlayerStamina() * 1.5), 15);
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 9));
+        g2.drawString(String.valueOf("SP: " + (hud.getPlayerStamina() - 1)) + " / 100", 115, 90);
 
-        // main HUD
+        // MAIN HUD
         g2.drawImage(sheets.getHudIcon().getImage(), 5, -110, 325,325, this);
-    }
-
-    public void drawObjectLayerZeroMap1(Graphics2D g2) {
-        
-        
 
     }
-
-    public void drawObjectLayerOneMap1(Graphics2D g2) {
-
-
-    }
-
-
 
 }

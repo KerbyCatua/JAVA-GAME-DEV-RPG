@@ -13,7 +13,7 @@ public class HUD{
         this.gameState = gameState;
     }
 
-    private int playerHealth = 100;
+    private double playerHealth = 100;
 
 
     private int playerMana = 100;
@@ -40,14 +40,14 @@ public class HUD{
 
     public void playerStaminaFunc() {
 
-        if (playerStamina <= 28) {
+        if (playerStamina <= 5) {
             gameState.outOfStamina = true;
-        } else if (playerStamina >= 43) {
+        } else if (playerStamina >= 20) {
             gameState.outOfStamina = false;
         }
 
         if(keyHandler.isShift && playerStamina >= 0 && !gameState.outOfStamina) playerStamina -= playerStaminaCost;
-        if(playerStamina <= 100) playerStamina += playerStaminaRegen;
+        else if(playerStamina <= 100) playerStamina += playerStaminaRegen;
     }
     
     public int getPlayerStamina() {
@@ -56,6 +56,14 @@ public class HUD{
 
     public int getPlayerMana() {
         return playerMana;
+    }
+
+    public double getPlayerHealth() {
+        return playerHealth;
+    }
+
+    public void setPlayerHealth(double playerHealth) {
+        this.playerHealth = playerHealth;
     }
 
 }

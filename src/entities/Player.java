@@ -29,15 +29,15 @@ public class Player{
     }
     
     public void playerMovementAndHitbox(){
-        double playerSpeed = 2;
+        double playerSpeed = 15; // TODO CHANGE TO ORIG 2
         if(hud.getPlayerStamina() >= 0 && !gameState.outOfStamina){
             if(keyHandler.isShift) playerSpeed = 4; // Shift Speed
         }
         
-        if(keyHandler.isUp && !CombatSystem.playerAttacked && !GameState.cannotMoveUpDueToCollision) playerPositionY -= playerSpeed;
-        if(keyHandler.isDown && !CombatSystem.playerAttacked && !GameState.cannotMoveDownDueToCollision) playerPositionY += playerSpeed;
-        if(keyHandler.isRight && !CombatSystem.playerAttacked && !GameState.cannotMoveRightDueToCollision) playerPositionX += playerSpeed;
-        if(keyHandler.isLeft && !CombatSystem.playerAttacked && !GameState.cannotMoveLeftDueToCollision) playerPositionX -= playerSpeed;
+        if(keyHandler.isUp && !CombatSystem.playerAttacked && !GameState.cannotMoveUpDueToCollision ) playerPositionY -= playerSpeed;
+        if(keyHandler.isDown && !CombatSystem.playerAttacked && !GameState.cannotMoveDownDueToCollision ) playerPositionY += playerSpeed;
+        if(keyHandler.isRight && !CombatSystem.playerAttacked && !GameState.cannotMoveRightDueToCollision ) playerPositionX += playerSpeed;
+        if(keyHandler.isLeft && !CombatSystem.playerAttacked && !GameState.cannotMoveLeftDueToCollision ) playerPositionX -= playerSpeed;
 
                                     //  offset & size   
         playerHitbox = new Rectangle(getPlayerPositionX() + 20, getPlayerPositionY() + 20, (getPlayerSizeWidth() - 41), (getPlayerSizeHeight()) - 27);
