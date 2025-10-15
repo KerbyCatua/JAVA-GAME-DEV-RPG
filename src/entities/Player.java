@@ -29,7 +29,7 @@ public class Player{
     }
     
     public void playerMovementAndHitbox(){
-        double playerSpeed = 15; // TODO CHANGE TO ORIG 2
+        double playerSpeed = 20; // TODO CHANGE TO ORIG 2
         if(hud.getPlayerStamina() >= 0 && !gameState.outOfStamina){
             if(keyHandler.isShift) playerSpeed = 4; // Shift Speed
         }
@@ -40,7 +40,7 @@ public class Player{
         if(keyHandler.isLeft && !CombatSystem.playerAttacked && !GameState.cannotMoveLeftDueToCollision ) playerPositionX -= playerSpeed;
 
                                     //  offset & size   
-        playerHitbox = new Rectangle(getPlayerPositionX() + 20, getPlayerPositionY() + 20, (getPlayerSizeWidth() - 41), (getPlayerSizeHeight()) - 27);
+        playerHitbox = new Rectangle(getPlayerPositionX() + 20,getPlayerPositionY() + 20, (getPlayerSizeWidth() - 41), (getPlayerSizeHeight()) - 35);
     }
 
 

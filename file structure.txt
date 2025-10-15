@@ -27,3 +27,10 @@ src/
 │   ├── sounds/
 └── utils/
     ├── AudioManager.java
+
+
+
+Time Management
+Scalability: Ensures the system can grow or adapt to future needs without major overhauls.
+Maintainability: system updates and maintenance.
+Feasibility: project achievable, and sustainable.

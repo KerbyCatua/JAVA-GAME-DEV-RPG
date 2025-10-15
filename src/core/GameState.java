@@ -20,9 +20,15 @@ public class GameState {
     public static boolean wolfOneChasing = false, wolfTwoChasing = false, wolfThreeChasing = false;
     public static boolean wolfOneHitbox = false, wolfTwoHitbox = false, wolfThreeHitbox = false;
     public static boolean wolfOneIsAlive = true, wolfTwoIsAlive = true, wolfThreeIsAlive = true;
+    public static boolean wolfOneCollidedToOther = false, wolfTwoCollidedToOther = false, wolfThreeCollidedToOther = false;
 
     public static boolean skeletonOneChasing = false, skeletonTwoChasing = false, skeletonThreeChasing = false;
     public static boolean skeletonOneHitbox = false, skeletonTwoHitbox = false, skeletonThreeHitbox = false;
     public static boolean skeletonOneIsAlive = true, skeletonTwoIsAlive = true, skeletonThreeIsAlive = true;
+
+    public static boolean mummyOneChasing = false, mummyTwoChasing = false, mummyThreeChasing = false;
+    public static boolean mummyOneHitbox = false, mummyTwoHitbox = false, mummyThreeHitbox = false;
+    public static boolean mummyOneIsAlive = true, mummyTwoIsAlive = true, mummyThreeIsAlive = true;
+
 
 }

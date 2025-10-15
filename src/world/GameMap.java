@@ -2,6 +2,8 @@ package world;
 
 import java.awt.*;
 
+import javax.swing.ImageIcon;
+
 import assets.*;
 import core.GameState;
 import entities.*;
@@ -39,8 +41,16 @@ public class GameMap {
         }else if(GameState.isInDryLandMap){
             objectLayerZeroPositionX = -790;
             objectLayerZeroPositionY = -589;
-        }
-        g2.drawImage(sheets.getWholeMapObjectsLayerZero().getImage(), objectLayerZeroPositionX, objectLayerZeroPositionY, mapWidth, mapHeight, null);
+        }  
+
+        ImageIcon layerTwoToDraw = null;
+
+        if(GameState.isInGreenLandMap) layerTwoToDraw = sheets.getWholeMapObjectsLayerZeroGreen();
+        if(GameState.isInDarkLandMap) layerTwoToDraw = sheets.getWholeMapObjectsLayerZeroDark();
+        if(GameState.isInSnowLandMap) layerTwoToDraw = sheets.getWholeMapObjectsLayerZeroSnow();
+        if(GameState.isInDryLandMap) layerTwoToDraw = sheets.getWholeMapObjectsLayerZeroDry();
+
+        g2.drawImage(layerTwoToDraw.getImage(), objectLayerZeroPositionX, objectLayerZeroPositionY, mapWidth, mapHeight, null);
     }
 
     public void objectsToDrawLayerOne(Graphics2D g2) {
@@ -59,23 +69,31 @@ public class GameMap {
             objectLayerOnePositionX = -790;
             objectLayerOnePositionY = -589;
         }
-        g2.drawImage(sheets.getWholeMapObjectsLayerOne().getImage(), objectLayerOnePositionX, objectLayerOnePositionY, mapWidth, mapHeight, null);
+
+        ImageIcon layerOneToDraw = null;
+
+        if(GameState.isInGreenLandMap) layerOneToDraw = sheets.getWholeMapObjectsLayerOneGreen();
+        if(GameState.isInDarkLandMap) layerOneToDraw = sheets.getWholeMapObjectsLayerOneDark();
+        if(GameState.isInSnowLandMap) layerOneToDraw = sheets.getWholeMapObjectsLayerOneSnow();
+        if(GameState.isInDryLandMap) layerOneToDraw = sheets.getWholeMapObjectsLayerOneDry();
+
+        g2.drawImage(layerOneToDraw.getImage(), objectLayerOnePositionX, objectLayerOnePositionY, mapWidth, mapHeight, null);
     }
 
     public void greenLandMap(Graphics2D g2) {
-        g2.drawImage(sheets.getWholeMap(), 0, 0, mapWidth, mapHeight, null);
+        g2.drawImage(sheets.getWholeMapInGreen(), 0, 0, mapWidth, mapHeight, null);
     }
 
     public void snowLandMap(Graphics2D g2) {
-        g2.drawImage(sheets.getWholeMap(), 0, -590, mapWidth, mapHeight, null);
+        g2.drawImage(sheets.getWholeMapInSnow(), 0, -590, mapWidth, mapHeight, null);
     }
 
     public void dryLandMap(Graphics2D g2) {
-        g2.drawImage(sheets.getWholeMap(), -790, -589, mapWidth, mapHeight, null);
+        g2.drawImage(sheets.getWholeMapInDry(), -790, -589, mapWidth, mapHeight, null);
     }
 
     public void darkLandMap(Graphics2D g2) {
-        g2.drawImage(sheets.getWholeMap(), -790, 0, mapWidth, mapHeight, null);
+        g2.drawImage(sheets.getWholeMapInDark(), -790, 0, mapWidth, mapHeight, null);
     }
 
     public void mapRenderLocationGameState() {

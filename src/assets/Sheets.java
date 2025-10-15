@@ -1,5 +1,6 @@
 package assets;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +9,12 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Sheets {
+
+    // ENEMY MUMMY
+    ImageIcon mummyWalkingLeft, mummyWalkingRight;
+    ImageIcon mummyLeftHurt, mummyRightHurt;  
+    ImageIcon mummyLeftAttack, mummyRightAttack;
+    ImageIcon mummyLeftDeath, mummyRightDeath;
 
     // ENEMY WOLF
     ImageIcon wolfWalkingLeft, wolfWalkingRight; 
@@ -32,18 +39,40 @@ public class Sheets {
 
     ImageIcon playerShadow;
 
+    ImageIcon cloudsMapOpeningEffect, cloudsMapIdleEffect;
+
+    ImageIcon wholeMapObjectsLayerOneGreen, wholeMapObjectsLayerOneDark, wholeMapObjectsLayerOneSnow, wholeMapObjectsLayerOneDry;
+    ImageIcon wholeMapObjectsLayerZeroGreen, wholeMapObjectsLayerZeroDark, wholeMapObjectsLayerZeroSnow, wholeMapObjectsLayerZeroDry;
+
     ImageIcon wholeMapObjectsLayerZero;
     ImageIcon wholeMapObjectsLayerOne;
-    BufferedImage wholeMap;
+    BufferedImage wholeMap, wholeMapInGreen, wholeMapInDark, wholeMapInSnow, wholeMapInDry;
 
     public Sheets(){
         try {
-            
+
+            //wholeMapInGreen, wholeMapInDark, wholeMapInSnow, wholeMapInDry
+            wholeMapInGreen = ImageIO.read(new File("sheets\\map\\Whole_Map_Green.png"));
+            wholeMapInDark = ImageIO.read(new File("sheets\\map\\Whole_Map_Dark.png"));
+            wholeMapInSnow = ImageIO.read(new File("sheets\\map\\Whole_Map_Snow.png"));
+            wholeMapInDry = ImageIO.read(new File("sheets\\map\\Whole_Map_Desert.png"));
             wholeMap = ImageIO.read(new File("sheets/map/Whole_Map.png"));
 
         } catch (IOException e) {
             e.getStackTrace();
         }
+
+        this.mummyWalkingLeft = new ImageIcon("sheets/enemies/map3/mummy/walking_left.gif");
+        this.mummyWalkingRight = new ImageIcon("sheets/enemies/map3/mummy/walking_right.gif");
+
+        this.mummyLeftHurt = new ImageIcon("sheets/enemies/map3/mummy/hurt_left.gif");
+        this.mummyRightHurt = new ImageIcon("sheets/enemies/map3/mummy/hurt_right.gif");
+
+        this.mummyLeftAttack = new ImageIcon("sheets/enemies/map3/mummy/attack_left.gif");
+        this.mummyRightAttack = new ImageIcon("sheets/enemies/map3/mummy/attack_right.gif");
+
+        this.mummyLeftDeath = new ImageIcon("sheets/enemies/map3/mummy/death_left.gif");
+        this.mummyRightDeath = new ImageIcon("sheets/enemies/map3/mummy/death_right.gif");
 
         this.skeletonWalkingLeft = new ImageIcon("sheets\\enemies\\map4\\skeleton\\walking_left.gif");
         this.skeletonWalkingRight = new ImageIcon("sheets\\enemies\\map4\\skeleton\\walking_right.gif");
@@ -71,6 +100,20 @@ public class Sheets {
 
         this.wolfWalkingLeft = new ImageIcon("sheets/enemies/map2/wolf/wolf_left_walk.gif");
         this.wolfWalkingRight = new ImageIcon("sheets/enemies/map2/wolf/wolf_right_walk.gif");
+
+        this.cloudsMapOpeningEffect = new ImageIcon("sheets\\map\\clouds_opening.gif");
+        this.cloudsMapIdleEffect = new ImageIcon("sheets\\map\\clouds_idle.gif");
+
+        // OBJECTS LAYER 1 AND 0
+        this.wholeMapObjectsLayerOneGreen = new ImageIcon("sheets\\map\\GREEN LAYER 1.png");
+        this.wholeMapObjectsLayerOneDark = new ImageIcon("sheets\\map\\DARK LAYER 1.png");
+        this.wholeMapObjectsLayerOneSnow = new ImageIcon("sheets\\map\\SNOW LAYER 1.png");
+        this.wholeMapObjectsLayerOneDry = new ImageIcon("sheets\\map\\DRY LAYER 1.png");
+        this.wholeMapObjectsLayerZeroGreen = new ImageIcon("sheets\\map\\GREEN LAYER 0.png");
+        this.wholeMapObjectsLayerZeroDark = new ImageIcon("sheets\\map\\DARK LAYER 0.png");
+        this.wholeMapObjectsLayerZeroSnow = new ImageIcon("sheets\\map\\SNOW LAYER 0.png");
+        this.wholeMapObjectsLayerZeroDry = new ImageIcon("sheets\\map\\DRY LAYER 0.png");
+
 
         this.wholeMapObjectsLayerZero = new ImageIcon("sheets//map//Layer 0.png");
         this.wholeMapObjectsLayerOne = new ImageIcon("sheets/map/Layer 1.png");
@@ -209,6 +252,75 @@ public class Sheets {
     }
     public ImageIcon getSkeletonWalkingRight() {
         return skeletonWalkingRight;
+    }
+
+    public ImageIcon getMummyLeftAttack() {
+        return mummyLeftAttack;
+    }
+    public ImageIcon getMummyLeftDeath() {
+        return mummyLeftDeath;
+    }
+    public ImageIcon getMummyLeftHurt() {
+        return mummyLeftHurt;
+    }
+    public ImageIcon getMummyRightAttack() {
+        return mummyRightAttack;
+    }
+    public ImageIcon getMummyRightDeath() {
+        return mummyRightDeath;
+    }
+    public ImageIcon getMummyRightHurt() {
+        return mummyRightHurt;
+    }
+    public ImageIcon getMummyWalkingLeft() {
+        return mummyWalkingLeft;
+    }
+    public ImageIcon getMummyWalkingRight() {
+        return mummyWalkingRight;
+    }
+
+    public ImageIcon getCloudsMapIdleEffect() {
+        return cloudsMapIdleEffect;
+    }
+    public ImageIcon getCloudsMapOpeningEffect() {
+        return cloudsMapOpeningEffect;
+    }
+    public BufferedImage getWholeMapInDark() {
+        return wholeMapInDark;
+    }
+    public BufferedImage getWholeMapInDry() {
+        return wholeMapInDry;
+    }
+    public BufferedImage getWholeMapInGreen() {
+        return wholeMapInGreen;
+    }
+
+    public BufferedImage getWholeMapInSnow() {
+        return wholeMapInSnow;
+    }
+    public ImageIcon getWholeMapObjectsLayerOneDark() {
+        return wholeMapObjectsLayerOneDark;
+    }
+    public ImageIcon getWholeMapObjectsLayerOneDry() {
+        return wholeMapObjectsLayerOneDry;
+    }
+    public ImageIcon getWholeMapObjectsLayerOneGreen() {
+        return wholeMapObjectsLayerOneGreen;
+    }
+    public ImageIcon getWholeMapObjectsLayerOneSnow() {
+        return wholeMapObjectsLayerOneSnow;
+    }
+    public ImageIcon getWholeMapObjectsLayerZeroDark() {
+        return wholeMapObjectsLayerZeroDark;
+    }
+    public ImageIcon getWholeMapObjectsLayerZeroDry() {
+        return wholeMapObjectsLayerZeroDry;
+    }
+    public ImageIcon getWholeMapObjectsLayerZeroGreen() {
+        return wholeMapObjectsLayerZeroGreen;
+    }
+    public ImageIcon getWholeMapObjectsLayerZeroSnow() {
+        return wholeMapObjectsLayerZeroSnow;
     }
 
 }

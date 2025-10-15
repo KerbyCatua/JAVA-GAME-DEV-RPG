@@ -3,12 +3,10 @@ package entities;
 import java.awt.*;
 import javax.swing.*;
 
-import assets.Sheets;
-import core.GamePanel;
-import core.GameState;
-import systems.CombatSystem;
-import systems.KeyHandler;
-import ui.HUD;
+import assets.*;
+import core.*;
+import systems.*;
+import ui.*;
 
 public class Enemy {
 
@@ -32,10 +30,445 @@ public class Enemy {
 
     public void enemyDeployState(Graphics2D g2) {
         
-        if(GameState.isInDarkLandMap) wolfToDraw(g2);
+        // DRAW ENEMY AND DAMAGE NUMBER
+        if(GameState.isInDarkLandMap) {
+            wolfToDraw(g2);
+
+            // g2.setColor(Color.BLACK);
+            //     g2.setFont(new Font("Arial", Font.BOLD, 10));
+            //     String message = "Out of Stamina!";
+            //     g2.drawString
+            // g2.setcolor
+        }
         if(GameState.isInDryLandMap) skeletonToDraw(g2);
+        if(GameState.isInSnowLandMap) mummyToDraw(g2);
 
     }
+
+    // MUMMY =================================================================
+    // POSITION
+    private int mummyOnePositionX = 300, mummyTwoPositionX = 500, mummyThreePositionX = 600;
+    private int mummyOnePositionY = 275, mummyTwoPositionY = 375, mummyThreePositionY = 200;
+
+    // PATROLLING POSITION
+    private int mummyOnePatrolingStartX = 300, mummyTwoPatrolingStartX = 450, mummyThreePatrolingStartX = 525;
+    private int mummyOnePatrolingEndingX = 475, mummyTwoPatrolingEndingX = 600, mummyThreePatrolingEndingX = 650;
+
+    // SIZE
+    private int mummyOneWidth = 100, mummyTwoWidth = 100, mummyThreeWidth = 100;
+    private int mummyOneHeight = 100, mummyTwoHeight = 100, mummyThreeHeight = 100;
+
+    // MOVEMENT AND SPEED
+    private int mummyOneSpeed = 2, mummyTwoSpeed = 2, mummyThreeSpeed = 2;
+
+    // HEALTH AND ATTACK
+    private int mummyOneHealth = 100, mummyTwoHealth = 100, mummyThreeHealth = 100;
+    private double mummyOneAttackDamage = 10, mummyTwoAttackDamage = 10, mummyThreeAttackDamage = 10;
+
+    // ATTACK TIMING
+    private long mummyOneAttackDuration, mummyTwoAttackDuration, mummyThreeAttackDuration;
+    private long mummyOneAttackCooldown, mummyTwoAttackCooldown, mummyThreeAttackCooldown;
+    private boolean mummyOneAttacked = false, mummyTwoAttacked = false, mummyThreeAttacked = false;
+
+    // HIT AND DEATH STATES
+    private boolean mummyOneHitted = false, mummyTwoHitted = false, mummyThreeHitted = false;
+    private boolean mummyOneDeathAnimationPlayedFlag, mummyTwoDeathAnimationPlayedFlag, mummyThreeDeathAnimationPlayedFlag;
+    private long mummyOneDeathAnimationDuration, mummyTwoDeathAnimationDuration, mummyThreeDeathAnimationDuration;
+    private boolean mummyOneDeathTriggered = false, mummyTwoDeathTriggered = false, mummyThreeDeathTriggered = false;
+
+    // HITBOXES AND ANIMATION
+    Rectangle mummyOneChaseBox, mummyTwoChaseBox, mummyThreeChaseBox;
+    Rectangle mummyOneHitBox, mummyTwoHitBox, mummyThreeHitBox;
+    Rectangle mummyOneAttackRangeBox, mummyTwoAttackRangeBox, mummyThreeAttackRangeBox;
+    ImageIcon mummyOneToDraw, mummyTwoToDraw, mummyThreeToDraw;
+
+    public void updateMummyPositionAndMummyAttack() {
+        
+        if(!GameState.isInSnowLandMap) return;
+
+        // MUMMY ONE START
+        if (getMummyOneHealth() <= 0 && !mummyOneDeathTriggered) {
+            GameState.mummyOneIsAlive = false;
+            mummyOneDeathAnimationPlayedFlag = true;
+            mummyOneDeathAnimationDuration = System.currentTimeMillis();
+            mummyOneDeathTriggered = true;
+        }
+        if (GameState.mummyOneIsAlive) {
+            if (!GameState.mummyOneChasing) {
+                mummyOnePositionX += mummyOneSpeed;
+                if (mummyOnePositionX >= mummyOnePatrolingEndingX || mummyOnePositionX <= mummyOnePatrolingStartX) {
+                    mummyOneSpeed *= -1;
+                }
+            }
+
+            if (GameState.mummyOneChasing) {
+                mummyOneSpeed = 2;
+                int tolerance = 5;
+                if (!GameState.mummyOneHitbox && !mummyOneHitted) {
+                    // Move X
+                    if (mummyOnePositionX < player.getPlayerPositionX() - tolerance) {
+                        mummyOnePositionX += mummyOneSpeed;
+                    } else if (mummyOnePositionX > player.getPlayerPositionX() + tolerance) {
+                        mummyOnePositionX -= mummyOneSpeed;
+                    }
+
+                    // Move Y
+                    if (mummyOnePositionY < player.getPlayerPositionY() - tolerance) {
+                        mummyOnePositionY += mummyOneSpeed;
+                    } else if (mummyOnePositionY > player.getPlayerPositionY() + tolerance) {
+                        mummyOnePositionY -= mummyOneSpeed;
+                    }
+                }
+
+                mummyOneAttackRangeBox = new Rectangle(mummyOnePositionX + 10, mummyOnePositionY + 10, 80, 80);
+                if (Player.playerHitbox.intersects(mummyOneAttackRangeBox) && System.currentTimeMillis() - mummyOneAttackCooldown >= 1750) {
+                    mummyOneAttacked = true;
+                    mummyOneAttackDuration = System.currentTimeMillis();
+                    mummyOneAttackCooldown = System.currentTimeMillis();
+                    System.out.println("mummy one attacked!!!");
+                }
+
+                if (mummyOneAttacked && System.currentTimeMillis() - mummyOneAttackDuration >= 750) {
+                    mummyOneAttacked = false;
+                }
+
+                if (mummyOneAttacked) {
+                    double balancedMummyDamage = mummyOneAttackDamage * 0.025;
+                    hud.setPlayerHealth(hud.getPlayerHealth() - balancedMummyDamage);
+                }
+
+                // PLAYER SKILLS / PUNCH
+                if (combatSystem.playerAttackRange.intersects(mummyOneHitBox) && CombatSystem.playerAttacked) {
+                    setMummyOneHealth(getMummyOneHealth() - (int) (combatSystem.playerPunchDamage * 0.1));
+                    mummyOneHitted = true;
+                } else {
+                    mummyOneHitted = false;
+                }
+
+                if (mummyOneHitted) {
+                    if (keyHandler.lastPoseLeft) mummyOnePositionX -= 3;
+                    if (keyHandler.lastPoseRight) mummyOnePositionX += 3;
+                }
+            }
+
+            mummyOneChaseBox = new Rectangle(mummyOnePositionX - 50, mummyOnePositionY - 50, 200, 200);
+            if (Player.playerHitbox.intersects(mummyOneChaseBox)) {
+                GameState.mummyOneChasing = true;
+            }
+
+            mummyOneHitBox = new Rectangle(mummyOnePositionX + 35, mummyOnePositionY + 48, 30, 10);
+            if (Player.playerHitbox.intersects(mummyOneHitBox)) {
+                GameState.mummyOneHitbox = true;
+            } else {
+                GameState.mummyOneHitbox = false;
+            }
+        }
+        // MUMMY ONE END
+
+
+        // MUMMY TWO START
+        if (getMummyTwoHealth() <= 0 && !mummyTwoDeathTriggered) {
+            GameState.mummyTwoIsAlive = false;
+            mummyTwoDeathAnimationPlayedFlag = true;
+            mummyTwoDeathAnimationDuration = System.currentTimeMillis();
+            mummyTwoDeathTriggered = true;
+        }
+        if (GameState.mummyTwoIsAlive) {
+            if (!GameState.mummyTwoChasing) {
+                mummyTwoPositionX += mummyTwoSpeed;
+                if (mummyTwoPositionX >= mummyTwoPatrolingEndingX || mummyTwoPositionX <= mummyTwoPatrolingStartX) {
+                    mummyTwoSpeed *= -1;
+                }
+            }
+
+            if (GameState.mummyTwoChasing) {
+                mummyTwoSpeed = 2;
+                int tolerance = 5;
+                if (!GameState.mummyTwoHitbox && !mummyTwoHitted) {
+                    // Move X
+                    if (mummyTwoPositionX < player.getPlayerPositionX() - tolerance) {
+                        mummyTwoPositionX += mummyTwoSpeed;
+                    } else if (mummyTwoPositionX > player.getPlayerPositionX() + tolerance) {
+                        mummyTwoPositionX -= mummyTwoSpeed;
+                    }
+
+                    // Move Y
+                    if (mummyTwoPositionY < player.getPlayerPositionY() - tolerance) {
+                        mummyTwoPositionY += mummyTwoSpeed;
+                    } else if (mummyTwoPositionY > player.getPlayerPositionY() + tolerance) {
+                        mummyTwoPositionY -= mummyTwoSpeed;
+                    }
+                }
+
+                mummyTwoAttackRangeBox = new Rectangle(mummyTwoPositionX + 10, mummyTwoPositionY + 10, 80, 80);
+                if (Player.playerHitbox.intersects(mummyTwoAttackRangeBox) && System.currentTimeMillis() - mummyTwoAttackCooldown >= 1750) {
+                    mummyTwoAttacked = true;
+                    mummyTwoAttackDuration = System.currentTimeMillis();
+                    mummyTwoAttackCooldown = System.currentTimeMillis();
+                    System.out.println("mummy two attacked!!!");
+                }
+
+                if (mummyTwoAttacked && System.currentTimeMillis() - mummyTwoAttackDuration >= 750) {
+                    mummyTwoAttacked = false;
+                }
+
+                if (mummyTwoAttacked) {
+                    double balancedMummyDamage = mummyTwoAttackDamage * 0.025;
+                    hud.setPlayerHealth(hud.getPlayerHealth() - balancedMummyDamage);
+                }
+
+                // PLAYER SKILLS / PUNCH
+                if (combatSystem.playerAttackRange.intersects(mummyTwoHitBox) && CombatSystem.playerAttacked) {
+                    setMummyTwoHealth(getMummyTwoHealth() - (int) (combatSystem.playerPunchDamage * 0.1));
+                    mummyTwoHitted = true;
+                } else {
+                    mummyTwoHitted = false;
+                }
+
+                if (mummyTwoHitted) {
+                    if (keyHandler.lastPoseLeft) mummyTwoPositionX -= 3;
+                    if (keyHandler.lastPoseRight) mummyTwoPositionX += 3;
+                }
+            }
+
+            mummyTwoChaseBox = new Rectangle(mummyTwoPositionX - 50, mummyTwoPositionY - 50, 200, 200);
+            if (Player.playerHitbox.intersects(mummyTwoChaseBox)) {
+                GameState.mummyTwoChasing = true;
+            }
+
+            mummyTwoHitBox = new Rectangle(mummyTwoPositionX + 35, mummyTwoPositionY + 48, 30, 10);
+            if (Player.playerHitbox.intersects(mummyTwoHitBox)) {
+                GameState.mummyTwoHitbox = true;
+            } else {
+                GameState.mummyTwoHitbox = false;
+            }
+        }
+        // MUMMY TWO END
+
+
+        // MUMMY THREE START
+        if (getMummyThreeHealth() <= 0 && !mummyThreeDeathTriggered) {
+            GameState.mummyThreeIsAlive = false;
+            mummyThreeDeathAnimationPlayedFlag = true;
+            mummyThreeDeathAnimationDuration = System.currentTimeMillis();
+            mummyThreeDeathTriggered = true;
+        }
+        if (GameState.mummyThreeIsAlive) {
+            if (!GameState.mummyThreeChasing) {
+                mummyThreePositionX += mummyThreeSpeed;
+                if (mummyThreePositionX >= mummyThreePatrolingEndingX || mummyThreePositionX <= mummyThreePatrolingStartX) {
+                    mummyThreeSpeed *= -1;
+                }
+            }
+
+            if (GameState.mummyThreeChasing) {
+                mummyThreeSpeed = 2;
+                int tolerance = 5;
+                if (!GameState.mummyThreeHitbox && !mummyThreeHitted) {
+                    // Move X
+                    if (mummyThreePositionX < player.getPlayerPositionX() - tolerance) {
+                        mummyThreePositionX += mummyThreeSpeed;
+                    } else if (mummyThreePositionX > player.getPlayerPositionX() + tolerance) {
+                        mummyThreePositionX -= mummyThreeSpeed;
+                    }
+
+                    // Move Y
+                    if (mummyThreePositionY < player.getPlayerPositionY() - tolerance) {
+                        mummyThreePositionY += mummyThreeSpeed;
+                    } else if (mummyThreePositionY > player.getPlayerPositionY() + tolerance) {
+                        mummyThreePositionY -= mummyThreeSpeed;
+                    }
+                }
+
+                mummyThreeAttackRangeBox = new Rectangle(mummyThreePositionX + 10, mummyThreePositionY + 10, 80, 80);
+                if (Player.playerHitbox.intersects(mummyThreeAttackRangeBox) && System.currentTimeMillis() - mummyThreeAttackCooldown >= 1750) {
+                    mummyThreeAttacked = true;
+                    mummyThreeAttackDuration = System.currentTimeMillis();
+                    mummyThreeAttackCooldown = System.currentTimeMillis();
+                    System.out.println("mummy three attacked!!!");
+                }
+
+                if (mummyThreeAttacked && System.currentTimeMillis() - mummyThreeAttackDuration >= 750) {
+                    mummyThreeAttacked = false;
+                }
+
+                if (mummyThreeAttacked) {
+                    double balancedMummyDamage = mummyThreeAttackDamage * 0.025;
+                    hud.setPlayerHealth(hud.getPlayerHealth() - balancedMummyDamage);
+                }
+
+                // PLAYER SKILLS / PUNCH
+                if (combatSystem.playerAttackRange.intersects(mummyThreeHitBox) && CombatSystem.playerAttacked) {
+                    setMummyThreeHealth(getMummyThreeHealth() - (int) (combatSystem.playerPunchDamage * 0.1));
+                    mummyThreeHitted = true;
+                } else {
+                    mummyThreeHitted = false;
+                }
+
+                if (mummyThreeHitted) {
+                    if (keyHandler.lastPoseLeft) mummyThreePositionX -= 3;
+                    if (keyHandler.lastPoseRight) mummyThreePositionX += 3;
+                }
+            }
+
+            mummyThreeChaseBox = new Rectangle(mummyThreePositionX - 50, mummyThreePositionY - 50, 200, 200);
+            if (Player.playerHitbox.intersects(mummyThreeChaseBox)) {
+                GameState.mummyThreeChasing = true;
+            }
+
+            mummyThreeHitBox = new Rectangle(mummyThreePositionX + 35, mummyThreePositionY + 48, 30, 10);
+            if (Player.playerHitbox.intersects(mummyThreeHitBox)) {
+                GameState.mummyThreeHitbox = true;
+            } else {
+                GameState.mummyThreeHitbox = false;
+            }
+        }
+        // MUMMY THREE END
+
+    }
+
+    public void mummyToDraw(Graphics2D g2) {
+        
+        // MUMMY ONE START
+        if(GameState.mummyOneIsAlive){
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(mummyOnePositionX + 25, mummyOnePositionY + 20, 100 / 2, 4);
+            g2.setColor(Color.RED);
+            g2.fillRect(mummyOnePositionX + 25, mummyOnePositionY + 20, getMummyOneHealth() / 2, 4);
+
+            if(!GameState.mummyOneChasing){
+                if(mummyOneSpeed > 0) mummyOneToDraw = sheets.getMummyWalkingRight();
+                else if(mummyOneSpeed < 0) mummyOneToDraw = sheets.getMummyWalkingLeft();
+                g2.drawImage(sheets.getPlayerShadow().getImage(), mummyOnePositionX + 20, mummyOnePositionY + 40, 60, 60, gamePanel);
+                g2.drawImage(mummyOneToDraw.getImage(), mummyOnePositionX, mummyOnePositionY, mummyOneWidth, mummyOneHeight, gamePanel);
+            }
+
+            if(GameState.mummyOneChasing){
+                if(player.getPlayerPositionX() > mummyOnePositionX){
+                    if(mummyOneHitted){
+                        mummyOneToDraw = sheets.getMummyRightHurt();
+                    } else {
+                        mummyOneToDraw = (mummyOneAttacked) ? sheets.getMummyRightAttack() : sheets.getMummyWalkingRight();
+                    }
+                } else {
+                    if(mummyOneHitted){
+                        mummyOneToDraw = sheets.getMummyLeftHurt();
+                    } else {
+                        mummyOneToDraw = (mummyOneAttacked) ? sheets.getMummyLeftAttack() : sheets.getMummyWalkingLeft();
+                    }
+                }
+
+                g2.drawImage(sheets.getPlayerShadow().getImage(), mummyOnePositionX + 20, mummyOnePositionY + 40, 60, 60, gamePanel);
+                g2.drawImage(mummyOneToDraw.getImage(), mummyOnePositionX, mummyOnePositionY, mummyOneWidth, mummyOneHeight, gamePanel);
+            }
+        }
+        if(!GameState.mummyOneIsAlive && mummyOneDeathAnimationPlayedFlag){
+            if(player.getPlayerPositionX() > mummyOnePositionX){
+                g2.drawImage(sheets.getMummyRightDeath().getImage(), mummyOnePositionX, mummyOnePositionY, mummyOneWidth, mummyOneHeight, gamePanel);
+            } else {
+                g2.drawImage(sheets.getMummyLeftDeath().getImage(), mummyOnePositionX, mummyOnePositionY, mummyOneWidth, mummyOneHeight, gamePanel);
+            }
+
+            if (System.currentTimeMillis() - mummyOneDeathAnimationDuration >= 700) {
+                mummyOneDeathAnimationPlayedFlag = false;
+            }
+        }
+        // MUMMY ONE END
+
+        // MUMMY TWO START
+        if(GameState.mummyTwoIsAlive){
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(mummyTwoPositionX + 25, mummyTwoPositionY + 20, 100 / 2, 4);
+            g2.setColor(Color.RED);
+            g2.fillRect(mummyTwoPositionX + 25, mummyTwoPositionY + 20, getMummyTwoHealth() / 2, 4);
+
+            if(!GameState.mummyTwoChasing){
+                if(mummyTwoSpeed > 0) mummyTwoToDraw = sheets.getMummyWalkingRight();
+                else if(mummyTwoSpeed < 0) mummyTwoToDraw = sheets.getMummyWalkingLeft();
+                g2.drawImage(sheets.getPlayerShadow().getImage(), mummyTwoPositionX + 20, mummyTwoPositionY + 40, 60, 60, gamePanel);
+                g2.drawImage(mummyTwoToDraw.getImage(), mummyTwoPositionX, mummyTwoPositionY, mummyTwoWidth, mummyTwoHeight, gamePanel);
+            }
+
+            if(GameState.mummyTwoChasing){
+                if(player.getPlayerPositionX() > mummyTwoPositionX){
+                    if(mummyTwoHitted){
+                        mummyTwoToDraw = sheets.getMummyRightHurt();
+                    } else {
+                        mummyTwoToDraw = (mummyTwoAttacked) ? sheets.getMummyRightAttack() : sheets.getMummyWalkingRight();
+                    }
+                } else {
+                    if(mummyTwoHitted){
+                        mummyTwoToDraw = sheets.getMummyLeftHurt();
+                    } else {
+                        mummyTwoToDraw = (mummyTwoAttacked) ? sheets.getMummyLeftAttack() : sheets.getMummyWalkingLeft();
+                    }
+                }
+
+                g2.drawImage(sheets.getPlayerShadow().getImage(), mummyTwoPositionX + 20, mummyTwoPositionY + 40, 60, 60, gamePanel);
+                g2.drawImage(mummyTwoToDraw.getImage(), mummyTwoPositionX, mummyTwoPositionY, mummyTwoWidth, mummyTwoHeight, gamePanel);
+            }
+        }
+        if(!GameState.mummyTwoIsAlive && mummyTwoDeathAnimationPlayedFlag){
+            if(player.getPlayerPositionX() > mummyTwoPositionX){
+                g2.drawImage(sheets.getMummyRightDeath().getImage(), mummyTwoPositionX, mummyTwoPositionY, mummyTwoWidth, mummyTwoHeight, gamePanel);
+            } else {
+                g2.drawImage(sheets.getMummyLeftDeath().getImage(), mummyTwoPositionX, mummyTwoPositionY, mummyTwoWidth, mummyTwoHeight, gamePanel);
+            }
+
+            if (System.currentTimeMillis() - mummyTwoDeathAnimationDuration >= 700) {
+                mummyTwoDeathAnimationPlayedFlag = false;
+            }
+        }
+        // MUMMY TWO END
+
+        // MUMMY THREE START
+        if(GameState.mummyThreeIsAlive){
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(mummyThreePositionX + 25, mummyThreePositionY + 20, 100 / 2, 4);
+            g2.setColor(Color.RED);
+            g2.fillRect(mummyThreePositionX + 25, mummyThreePositionY + 20, getMummyThreeHealth() / 2, 4);
+
+            if(!GameState.mummyThreeChasing){
+                if(mummyThreeSpeed > 0) mummyThreeToDraw = sheets.getMummyWalkingRight();
+                else if(mummyThreeSpeed < 0) mummyThreeToDraw = sheets.getMummyWalkingLeft();
+                g2.drawImage(sheets.getPlayerShadow().getImage(), mummyThreePositionX + 20, mummyThreePositionY + 40, 60, 60, gamePanel);
+                g2.drawImage(mummyThreeToDraw.getImage(), mummyThreePositionX, mummyThreePositionY, mummyThreeWidth, mummyThreeHeight, gamePanel);
+            }
+
+            if(GameState.mummyThreeChasing){
+                if(player.getPlayerPositionX() > mummyThreePositionX){
+                    if(mummyThreeHitted){
+                        mummyThreeToDraw = sheets.getMummyRightHurt();
+                    } else {
+                        mummyThreeToDraw = (mummyThreeAttacked) ? sheets.getMummyRightAttack() : sheets.getMummyWalkingRight();
+                    }
+                } else {
+                    if(mummyThreeHitted){
+                        mummyThreeToDraw = sheets.getMummyLeftHurt();
+                    } else {
+                        mummyThreeToDraw = (mummyThreeAttacked) ? sheets.getMummyLeftAttack() : sheets.getMummyWalkingLeft();
+                    }
+                }
+
+                g2.drawImage(sheets.getPlayerShadow().getImage(), mummyThreePositionX + 20, mummyThreePositionY + 40, 60, 60, gamePanel);
+                g2.drawImage(mummyThreeToDraw.getImage(), mummyThreePositionX, mummyThreePositionY, mummyThreeWidth, mummyThreeHeight, gamePanel);
+            }
+        }
+        if(!GameState.mummyThreeIsAlive && mummyThreeDeathAnimationPlayedFlag){
+            if(player.getPlayerPositionX() > mummyThreePositionX){
+                g2.drawImage(sheets.getMummyRightDeath().getImage(), mummyThreePositionX, mummyThreePositionY, mummyThreeWidth, mummyThreeHeight, gamePanel);
+            } else {
+                g2.drawImage(sheets.getMummyLeftDeath().getImage(), mummyThreePositionX, mummyThreePositionY, mummyThreeWidth, mummyThreeHeight, gamePanel);
+            }
+
+            if (System.currentTimeMillis() - mummyThreeDeathAnimationDuration >= 700) {
+                mummyThreeDeathAnimationPlayedFlag = false;
+            }
+        }
+        // MUMMY THREE END
+
+    }
+
 
     // SKELETON =================================================================
     // POSITION
@@ -149,7 +582,7 @@ public class Enemy {
                 GameState.skeletonOneChasing = true;
             }
 
-            skeletonOneHitBox = new Rectangle(skeletonOnePositionX + 25, skeletonOnePositionY + 25, 50, 50);
+            skeletonOneHitBox = new Rectangle(skeletonOnePositionX + 35, skeletonOnePositionY + 48, 30, 10);
             if (Player.playerHitbox.intersects(skeletonOneHitBox)) {
                 GameState.skeletonOneHitbox = true;
             } else {
@@ -228,7 +661,7 @@ public class Enemy {
                 GameState.skeletonTwoChasing = true;
             }
 
-            skeletonTwoHitBox = new Rectangle(skeletonTwoPositionX + 25, skeletonTwoPositionY + 25, 50, 50);
+            skeletonTwoHitBox = new Rectangle(skeletonTwoPositionX + 35, skeletonTwoPositionY + 48, 30, 10);
             if (Player.playerHitbox.intersects(skeletonTwoHitBox)) {
                 GameState.skeletonTwoHitbox = true;
             } else {
@@ -307,7 +740,7 @@ public class Enemy {
                 GameState.skeletonThreeChasing = true;
             }
 
-            skeletonThreeHitBox = new Rectangle(skeletonThreePositionX + 25, skeletonThreePositionY + 25, 50, 50);
+            skeletonThreeHitBox = new Rectangle(skeletonThreePositionX + 35, skeletonThreePositionY + 48, 30, 10);
             if (Player.playerHitbox.intersects(skeletonThreeHitBox)) {
                 GameState.skeletonThreeHitbox = true;
             } else {
@@ -316,14 +749,14 @@ public class Enemy {
         }
         // SKELETON THREE END
 
-
-
     }
 
     public void skeletonToDraw(Graphics2D g2) {
         
         // SKELETON ONE START
         if(GameState.skeletonOneIsAlive){
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(skeletonOnePositionX + 25, skeletonOnePositionY + 20, 100 / 2, 4);
             g2.setColor(Color.RED);
             g2.fillRect(skeletonOnePositionX + 25, skeletonOnePositionY + 20, getSkeletonOneHealth() / 2, 4);
 
@@ -369,6 +802,8 @@ public class Enemy {
 
         // SKELETON TWO START
         if (GameState.skeletonTwoIsAlive) {
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(skeletonTwoPositionX + 25, skeletonTwoPositionY + 20, 100 / 2, 4);
             g2.setColor(Color.RED);
             g2.fillRect(skeletonTwoPositionX + 25, skeletonTwoPositionY + 20, getSkeletonTwoHealth() / 2, 4);
 
@@ -414,6 +849,8 @@ public class Enemy {
 
         // SKELETON THREE START
         if (GameState.skeletonThreeIsAlive) {
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(skeletonThreePositionX + 25, skeletonThreePositionY + 20, 100 / 2, 4);
             g2.setColor(Color.RED);
             g2.fillRect(skeletonThreePositionX + 25, skeletonThreePositionY + 20, getSkeletonThreeHealth() / 2, 4);
 
@@ -456,8 +893,6 @@ public class Enemy {
             }
         }
         // SKELETON THREE END
-
-
 
     }
 
@@ -521,18 +956,18 @@ public class Enemy {
 
                 wolfOneSpeed = 2;
                 int tolerance = 5;
-                if (!GameState.wolfOneHitbox && !wolfOneHitted) {
+                if (!GameState.wolfOneHitbox &&!wolfOneHitted) {
                     // Move X
                     if (wolfOnePositionX < player.getPlayerPositionX() - tolerance) {
                         wolfOnePositionX += wolfOneSpeed;
-                    } else if (wolfOnePositionX > player.getPlayerPositionX() + tolerance) {
+                    }else if (wolfOnePositionX > player.getPlayerPositionX() + tolerance) {
                         wolfOnePositionX -= wolfOneSpeed;
                     }
 
                     // Move Y
                     if (wolfOnePositionY < player.getPlayerPositionY() - tolerance) {
                         wolfOnePositionY += wolfOneSpeed;
-                    } else if (wolfOnePositionY > player.getPlayerPositionY() + tolerance) {
+                    }else if (wolfOnePositionY > player.getPlayerPositionY()  + tolerance) {
                         wolfOnePositionY -= wolfOneSpeed;
                     }
                 }
@@ -572,10 +1007,10 @@ public class Enemy {
                 GameState.wolfOneChasing = true;
             }
 
-            wolfOneHitBox = new Rectangle(wolfOnePositionX + 25, wolfOnePositionY + 25, 50, 50);
+            wolfOneHitBox = new Rectangle(wolfOnePositionX + 35, wolfOnePositionY + 48, 30, 10);
             if(Player.playerHitbox.intersects(wolfOneHitBox)){
                 GameState.wolfOneHitbox = true;
-            }else GameState.wolfOneHitbox = false;
+            }else GameState.wolfOneHitbox = false ;
         }
         // WOLF ONE END
 
@@ -647,7 +1082,7 @@ public class Enemy {
                 GameState.wolfTwoChasing = true;
             }
 
-            wolfTwoHitBox = new Rectangle(wolfTwoPositionX + 25, wolfTwoPositionY + 25, 50, 50);
+            wolfTwoHitBox = new Rectangle(wolfTwoPositionX + 35, wolfTwoPositionY + 48, 30, 10);
             if(Player.playerHitbox.intersects(wolfTwoHitBox)){
                 GameState.wolfTwoHitbox = true;
             } else GameState.wolfTwoHitbox = false;
@@ -723,7 +1158,7 @@ public class Enemy {
                 GameState.wolfThreeChasing = true;
             }
 
-            wolfThreeHitBox = new Rectangle(wolfThreePositionX + 25, wolfThreePositionY + 25, 50, 50);
+            wolfThreeHitBox = new Rectangle(wolfThreePositionX + 35, wolfThreePositionY + 48, 30, 10);
             if (Player.playerHitbox.intersects(wolfThreeHitBox)) {
                 GameState.wolfThreeHitbox = true;
             } else GameState.wolfThreeHitbox = false;
@@ -731,11 +1166,12 @@ public class Enemy {
         // WOLF THREE END
 
     }
-    
     public void wolfToDraw(Graphics2D g2) {
 
         // WOLF ONE START
         if(GameState.wolfOneIsAlive){
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(wolfOnePositionX + 25, wolfOnePositionY + 20, 100 / 2, 4);
             g2.setColor(Color.RED);
             g2.fillRect(wolfOnePositionX + 25, wolfOnePositionY + 20, getWolfOneHealth() / 2, 4);
             if(!GameState.wolfOneChasing){
@@ -772,6 +1208,8 @@ public class Enemy {
 
         // WOLF TWO START 
         if(GameState.wolfTwoIsAlive){
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(wolfTwoPositionX + 25, wolfTwoPositionY + 20, 100 / 2, 4);
             g2.setColor(Color.RED);
             g2.fillRect(wolfTwoPositionX + 25, wolfTwoPositionY + 20, getWolfTwoHealth() / 2, 4);
             if(!GameState.wolfTwoChasing){
@@ -810,6 +1248,8 @@ public class Enemy {
 
         // WOLF THREE START
         if (GameState.wolfThreeIsAlive) {
+            g2.setColor(new Color(82, 6, 14));
+            g2.fillRect(wolfThreePositionX + 25, wolfThreePositionY + 20, 100 / 2, 4);
             g2.setColor(Color.RED);
             g2.fillRect(wolfThreePositionX + 25, wolfThreePositionY + 20, getWolfThreeHealth() / 2, 4);
 
@@ -848,9 +1288,30 @@ public class Enemy {
         // WOLF THREE END
 
     }
-
-
     // GETTERS & SETTERS
+    public int getMummyThreeHealth() {
+        return mummyThreeHealth;
+    }
+
+    public void setMummyThreeHealth(int mummyThreeHealth) {
+        this.mummyThreeHealth = mummyThreeHealth;
+    }
+
+    public int getMummyTwoHealth() {
+        return mummyTwoHealth;
+    }
+
+    public void setMummyTwoHealth(int mummyTwoHealth) {
+        this.mummyTwoHealth = mummyTwoHealth;
+    }
+
+    public int getMummyOneHealth() {
+        return mummyOneHealth;
+    }
+
+    public void setMummyOneHealth(int mummyOneHealth) {
+        this.mummyOneHealth = mummyOneHealth;
+    }
 
     public int getSkeletonThreeHealth() {
         return skeletonThreeHealth;
@@ -897,6 +1358,13 @@ public class Enemy {
     }
     public void setWolfOneHealth(int wolfOneHealth) {
         this.wolfOneHealth = wolfOneHealth;
+    }
+
+    public int getWolfOnePositionX() {
+        return wolfOnePositionX;
+    }
+    public int getWolfOnePositionY() {
+        return wolfOnePositionY;
     }
 
 }

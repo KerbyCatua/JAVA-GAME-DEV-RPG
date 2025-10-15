@@ -8,9 +8,10 @@ import world.*;
 
 import javax.swing.*;
 import java.awt.*;
+// import java.awt.geom.AffineTransform;
 
 // TODO CAMERA SYSTEM 
-// import java.awt.geom.AffineTransform;
+import java.awt.geom.AffineTransform;
 
 public class GamePanel extends JPanel{
 
@@ -34,7 +35,7 @@ public class GamePanel extends JPanel{
         addKeyListener(keyHandler);
         setFocusable(true);
 
-        this.setBackground(Color.GRAY);
+        this.setBackground(Color.BLACK);
         
         Timer timer = new Timer(41, e -> {
             player.playerMovementAndHitbox();
@@ -45,6 +46,7 @@ public class GamePanel extends JPanel{
 
             enemy.updateWolfPositionAndWolfAttack();
             enemy.updateSkeletonPositionAndSkeletonAttack();
+            enemy.updateMummyPositionAndMummyAttack();
             repaint();
         });
         timer.start();
@@ -75,9 +77,9 @@ public class GamePanel extends JPanel{
             // game start
 
             // TODO camera system
-            // g2.translate(getWidth()/2.15, getHeight()/2.2);   
-            // g2.scale(1.25, 1.25);
-            // g2.translate(-player.getPlayerPositionX(), -player.getPlayerPositionY());
+            g2.translate(getWidth()/2.15, getHeight()/2.2);   
+            g2.scale(1.25, 1.25);
+            g2.translate(-player.getPlayerPositionX(), -player.getPlayerPositionY());
             
             // map location
             if(GameState.isInGreenLandMap) gameMap.greenLandMap(g2);
@@ -106,19 +108,23 @@ public class GamePanel extends JPanel{
             // playerAttacks(g2);
             enemy.enemyDeployState(g2);
             gameMap.objectsToDrawLayerOne(g2); //layer 2
-            
-            // TODO CAMERA SYSTEM
-            // g2.setTransform(new AffineTransform());
 
+            // TODO  AMAMAYA
+            g2.drawImage(sheets.getCloudsMapOpeningEffect().getImage(), 0, 0, 800, 600, this);
+            // TODO CAMERA SYSTEM
+            g2.setTransform(new AffineTransform());
             hudDisplay(g2);
+            
+        
         }
 
     }
 
+
     public void thumbNailDisplay(Graphics2D g2) {
 
         // TODO REPLACE IMAGE THUMBNAIL / TO DELETE
-        g2.setColor(Color.BLACK);
+        g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
         String message = "Press any key to continue";
         g2.drawString(message, (panelWidth / 2) - 130, panelHeight / 2);
